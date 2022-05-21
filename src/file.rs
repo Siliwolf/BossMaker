@@ -4,7 +4,7 @@ pub mod file
 
     use crate::mcvalues::mcvalues::*;
 
-    #[derive(Serialize, Deserialize, Clone)]
+    #[derive(Serialize, Deserialize, Clone, Debug)]
     pub struct Boss
     {
         pub name: String,
@@ -26,6 +26,12 @@ pub mod file
         pub abilities: Vec<BossAbility>,
         pub drop_type: String,
         pub drops: Vec<BossDrop>
+    }
+
+    pub struct Project
+    {
+        pub path: String,
+        pub data: Boss
     }
 
     impl Boss
@@ -109,7 +115,7 @@ pub mod file
                 return Err("Invalid files at location");
             }
 
-            if (f.file_name() == "data")
+            if f.file_name() == "data"
             {
                 found_data_folder = true;
             }
@@ -118,7 +124,11 @@ pub mod file
         if !found_data_folder
         {
             //Create data folder
-            std::fs::create_dir("./data");
+            if std::fs::create_dir("./data").is_ok()
+            {
+                println!("Could not create data folder\n\n\n");
+                panic!()
+            }
         }
 
         if std::fs::read_dir("./").unwrap().next().is_none()
@@ -132,34 +142,27 @@ pub mod file
         Ok(dir.to_str().unwrap().to_string())
     }
 
-    pub fn save_data(data: Boss, path: &str) -> bool
+    pub fn save_data(data: Boss, path: &str)
     {
         let j = serde_json::to_string(&data);
         
         if std::fs::write(path, j.unwrap()).is_ok()
         {
-            true
-        }
-        else 
-        {
-            false
+            
         }
     }
 
     pub fn load_data(path: &str) -> Boss
     {
+        println!("Loading file {}", path);
+
         let s: String = std::fs::read_to_string(path).unwrap();
         let s = s.as_str();
 
-        let data = serde_json::from_str(s);
+        let data: Result<Boss, serde_json::Error> = serde_json::from_str(s);
 
         let boss: Boss = data.unwrap();
 
         boss
-    }
-
-    pub fn new_proj(path: &str, name: &str)
-    {
-        
     }
 }

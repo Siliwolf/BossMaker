@@ -1,8 +1,5 @@
-use std::thread;
-
 use boss_maker::graphics::backend::*;
 use boss_maker::file::file::*;
-use boss_maker::mcvalues::mcvalues::*;
 use boss_maker::themes::themes::*;
 
 #[macroquad::main("Craftz Boss Maker")]
@@ -33,10 +30,19 @@ async fn main()
 
     let roboto = macroquad::prelude::load_ttf_font_from_bytes(include_bytes!("resources\\roboto.ttf")).unwrap();
 
+    //Draw loop variables
+    let mut cur_boss_name = String::new();
+    let mut cur_proj: Project = Project
+    {
+        path: String::new(),
+        data: Boss::new()
+    };
+
     //Main Loop    
     loop {
-        let d = draw_graphics(state, theme, roboto, dir.as_str()).await;
+        let d = draw_graphics(state, theme, roboto, dir.as_str(), &mut cur_boss_name, &mut cur_proj).await;
         theme = d.theme;
+        state = d.state;
         // thread::sleep(std::time::Duration::from_millis(50));
     }
 }
