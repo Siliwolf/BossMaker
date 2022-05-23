@@ -3,8 +3,7 @@ use boss_maker::graphics::backend::*;
 use boss_maker::file::file::*;
 use boss_maker::mcvalues::mcvalues::{Effect, Enchantment, BossAbility, BossAbilityType, BossAbilityLocationType, BossDrop};
 use boss_maker::mcvalues::mcvalues::colors::Colors;
-use boss_maker::themes::themes::*;
-use macroquad::prelude::*;
+use boss_maker::themes::themes::*;use macroquad::prelude::*;
 use rand::*;
 extern crate rand;
 
@@ -14,9 +13,6 @@ async fn main()
 
     let mut state: i8 = MAIN_SCREEN;
     let mut theme: i8 = 0;
-
-    //Debug, remove before shipping
-    let _dirresult = std::env::set_current_dir("./testfolder");
 
     let mut dir = String::new();
 
