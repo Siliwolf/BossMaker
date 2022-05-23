@@ -2,13 +2,28 @@ pub mod backend
 {
     use egui::*;
     use macroquad::prelude::*;
-
-    use crate::{mcvalues::mcvalues::{*, mobs::moblist}, themes::*, file::{file::*, self}};
+    use crate::{mcvalues::mcvalues::{*, colors::Colors}, themes::*, file::{file::*, self}, editor};
 
     pub struct OutputData
     {
         pub theme: i8,
         pub state: i8
+    }
+
+    pub struct BgDots
+    {
+        pub blue: [f32; 2],
+        pub red: [f32; 2],
+        pub green: [f32; 2],
+        pub yellow: [f32; 2],
+        pub blue_up: bool,
+        pub red_up: bool,
+        pub green_up: bool,
+        pub yellow_up: bool,
+        pub blue_right: bool,
+        pub red_right: bool,
+        pub green_right: bool,
+        pub yellow_right: bool
     }
 
     pub const MAIN_SCREEN: i8 = 0;
@@ -31,7 +46,7 @@ pub mod backend
         3: Sandy
     */
 
-    pub async fn draw_graphics(state: i8, theme: i8, macroquad_font: Font, directory: &str, cur_boss_name: &mut String, cur_proj: &mut Project) -> OutputData
+    pub async fn draw_graphics(state: i8, theme: i8, macroquad_font: Font, directory: &str, cur_boss_name: &mut String, cur_proj: &mut Project, cur_effect: &mut Effect, cur_custom_name_color: &mut Colors, dot_loc: &mut BgDots) -> OutputData
     {
         set_theme(theme);
 
@@ -41,7 +56,7 @@ pub mod backend
             state
         };
 
-        clear_background(WHITE);
+        clear_background(Color { r: 0.1, g: 0.1, b: 0.2, a: 1.0 });
 
         //Egui Drawing, external function calls
         egui_macroquad::ui(|egui_ctx| {
@@ -53,26 +68,17 @@ pub mod backend
 
             if state == EDITOR
             {
-                draw_editor(cur_proj, egui_ctx);
+                editor::editor::draw_editor(cur_proj, egui_ctx, &mut output_data, cur_effect, cur_custom_name_color);
             }
         });
 
         // Draw things before egui
-        
-        if theme == 0
-        {
-            clear_background(Color::new(0.14, 0.18, 0.2, 1.0));
-        }
-        else if theme == 1 {
-            clear_background(Color::new(0.65, 0.65, 0.65, 1.0));
-        }
-        else if theme == 2 {
-            clear_background(Color::new(0.0, 0.0, 0.6, 1.0));
-        }
-        else if theme == 3 {
-            clear_background(Color::new(0.7, 0.65, 0.1, 0.7));
-        }
 
+        //Background
+        use std::fs::File;
+        
+        draw_bg(dot_loc);
+        
         if state == MAIN_SCREEN
         {
             let mut text_size = ((screen_width() * 0.01) * (screen_height() * 0.01)) as u16;
@@ -89,6 +95,9 @@ pub mod backend
         egui_macroquad::draw();
          
         // Draw things after egui
+
+        let text_params: TextParams = TextParams { font: macroquad_font, font_size: 16, font_scale: 1.0, font_scale_aspect: 1.0, color: WHITE };
+        draw_text_ex(format!("Fps: {}", get_fps()).as_str(), 0.0, screen_height() * 0.98, text_params);
         
         next_frame().await;
     
@@ -219,24 +228,190 @@ pub mod backend
 
             output_data.theme = theme;
     }
-
-    fn draw_editor(project: &mut Project, egui_ctx: &Context)
+    
+    fn draw_bg(dot_loc: &mut BgDots)
     {
-        egui::Window::new("general_data")
-            .min_width(screen_width())
-            .min_height(screen_height() / 2.0)
-            .title_bar(false)
-            .anchor(Align2::LEFT_CENTER, [0.0, screen_height() / -8.0])
-            .resizable(false)
-            .show(egui_ctx, |ui| {
+        use ::rand::*;
 
-            ui.text_edit_singleline(&mut project.data.base_type);
-            if !moblist().contains(&project.data.base_type)
-            {
-                ui.label(RichText::new(format!("{} is not a valid mob type", project.data.base_type)).color(Color32::RED));
-            }
+        let speed = 130.0;
 
-        });
+        let speed = speed * thread_rng().gen_range(0.8..1.2);
+
+        //Blue dot
+        if dot_loc.blue_up
+        {
+            dot_loc.blue[1] += -speed * get_frame_time();
+        }
+        else
+        {
+            dot_loc.blue[1] += speed * get_frame_time();
+        }
+
+        if dot_loc.blue_right
+        {
+            dot_loc.blue[0] += speed * get_frame_time();
+        }
+        else
+        {
+            dot_loc.blue[0] += -speed * get_frame_time();
+        }
+
+        if dot_loc.blue[0] >= screen_width()
+        {
+            dot_loc.blue_right = false;
+        }
+        else if dot_loc.blue[0] <= 0.0
+        {
+            dot_loc.blue_right = true;
+        }
+
+        if dot_loc.blue[1] >= screen_height()
+        {
+            dot_loc.blue_up = true;
+        }
+        else if dot_loc.blue[1] <= 0.0
+        {
+            dot_loc.blue_up = false;
+        }
+
+        
+
+        //Red dot
+        if dot_loc.red_up
+        {
+            dot_loc.red[1] += -speed * get_frame_time();
+        }
+        else
+        {
+            dot_loc.red[1] += speed * get_frame_time();
+        }
+
+        if dot_loc.red_right
+        {
+            dot_loc.red[0] += speed * get_frame_time();
+        }
+        else
+        {
+            dot_loc.red[0] += -speed * get_frame_time();
+        }
+
+        if dot_loc.red[0] >= screen_width()
+        {
+            dot_loc.red_right = false;
+        }
+        else if dot_loc.red[0] <= 0.0
+        {
+            dot_loc.red_right = true;
+        }
+
+        if dot_loc.red[1] >= screen_height()
+        {
+            dot_loc.red_up = true;
+        }
+        else if dot_loc.red[1] <= 0.0
+        {
+            dot_loc.red_up = false;
+        }
+
+        
+
+        //Green dot
+        if dot_loc.green_up
+        {
+            dot_loc.green[1] += -speed * get_frame_time();
+        }
+        else
+        {
+            dot_loc.green[1] += speed * get_frame_time();
+        }
+
+        if dot_loc.green_right
+        {
+            dot_loc.green[0] += speed * get_frame_time();
+        }
+        else
+        {
+            dot_loc.green[0] += -speed * get_frame_time();
+        }
+
+        if dot_loc.green[0] >= screen_width()
+        {
+            dot_loc.green_right = false;
+        }
+        else if dot_loc.green[0] <= 0.0
+        {
+            dot_loc.green_right = true;
+        }
+
+        if dot_loc.green[1] >= screen_height()
+        {
+            dot_loc.green_up = true;
+        }
+        else if dot_loc.green[1] <= 0.0
+        {
+            dot_loc.green_up = false;
+        }
+
+        //Yellow dot
+        if dot_loc.yellow_up
+        {
+            dot_loc.yellow[1] += -speed * get_frame_time();
+        }
+        else
+        {
+            dot_loc.yellow[1] += speed * get_frame_time();
+        }
+
+        if dot_loc.yellow_right
+        {
+            dot_loc.yellow[0] += speed * get_frame_time();
+        }
+        else
+        {
+            dot_loc.yellow[0] += -speed * get_frame_time();
+        }
+
+        if dot_loc.yellow[0] >= screen_width()
+        {
+            dot_loc.yellow_right = false;
+        }
+        else if dot_loc.yellow[0] <= 0.0
+        {
+            dot_loc.yellow_right = true;
+        }
+
+        if dot_loc.yellow[1] >= screen_height()
+        {
+            dot_loc.yellow_up = true;
+        }
+        else if dot_loc.yellow[1] <= 0.0
+        {
+            dot_loc.yellow_up = false;
+        }
+
+        draw_line(dot_loc.blue[0], dot_loc.blue[1], dot_loc.green[0], dot_loc.green[1], 10.0, WHITE);
+        draw_line(dot_loc.red[0], dot_loc.red[1], dot_loc.green[0], dot_loc.green[1], 10.0, WHITE);
+        draw_line(dot_loc.yellow[0], dot_loc.yellow[1], dot_loc.green[0], dot_loc.green[1], 10.0, WHITE);
+        draw_line(dot_loc.blue[0], dot_loc.blue[1], dot_loc.red[0], dot_loc.red[1], 10.0, WHITE);
+        draw_line(dot_loc.blue[0], dot_loc.blue[1], dot_loc.yellow[0], dot_loc.yellow[1], 10.0, WHITE);
+        draw_line(dot_loc.red[0], dot_loc.red[1], dot_loc.yellow[0], dot_loc.yellow[1], 10.0, WHITE);
+
+        draw_line(dot_loc.red[0], dot_loc.red[1], 0.0, 0.0, 10.0, WHITE);
+        draw_line(dot_loc.green[0], dot_loc.green[1], screen_width(), 0.0, 10.0, WHITE);
+        draw_line(dot_loc.blue[0], dot_loc.blue[1], screen_width(), screen_height(), 10.0, WHITE);
+        draw_line(dot_loc.yellow[0], dot_loc.yellow[1], 0.0, screen_height(), 10.0, WHITE);
+
+        draw_circle(dot_loc.green[0], dot_loc.green[1], screen_height() / 32.0, GREEN);
+        draw_circle(dot_loc.green[0], dot_loc.green[1], screen_height() / 64.0, DARKGREEN);
+
+        draw_circle(dot_loc.red[0], dot_loc.red[1], screen_height() / 32.0, RED);
+        draw_circle(dot_loc.red[0], dot_loc.red[1], screen_height() / 64.0, DARKBROWN);
+
+        draw_circle(dot_loc.blue[0], dot_loc.blue[1], screen_height() / 32.0, BLUE);
+        draw_circle(dot_loc.blue[0], dot_loc.blue[1], screen_height() / 64.0, DARKBLUE);
+
+        draw_circle(dot_loc.yellow[0], dot_loc.yellow[1], screen_height() / 32.0, YELLOW);
+        draw_circle(dot_loc.yellow[0], dot_loc.yellow[1], screen_height() / 64.0, ORANGE);       
     }
 
 }

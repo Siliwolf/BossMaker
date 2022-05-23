@@ -1,6 +1,11 @@
 use boss_maker::graphics::backend::*;
 use boss_maker::file::file::*;
+use boss_maker::mcvalues::mcvalues::Effect;
+use boss_maker::mcvalues::mcvalues::colors::Colors;
 use boss_maker::themes::themes::*;
+use macroquad::prelude::*;
+use rand::*;
+extern crate rand;
 
 #[macroquad::main("Craftz Boss Maker")]
 async fn main()
@@ -34,19 +39,30 @@ async fn main()
     let mut cur_boss_name = String::new();
     let mut cur_proj: Project = Project
     {
-        path: String::new(),
+        path: "speed".to_string(),
         data: Boss::new()
     };
+    let mut cur_effect: Effect = Effect
+    {
+        id: String::new(),
+        lvl: 1
+    };
+    let mut cur_custom_name_color = Colors::White;
+    let mut dot_loc: BgDots = BgDots { blue: rand_pos(), red: rand_pos(), green: rand_pos(), yellow: rand_pos(), yellow_right: false, yellow_up: false, blue_up: true, blue_right: true, green_right: false, green_up: true, red_right: false, red_up: false};
 
     //Main Loop    
     loop {
-        let d = draw_graphics(state, theme, roboto, dir.as_str(), &mut cur_boss_name, &mut cur_proj).await;
+        let d = draw_graphics(state, theme, roboto, dir.as_str(), &mut cur_boss_name, &mut cur_proj, &mut cur_effect, &mut cur_custom_name_color, &mut dot_loc).await;
         theme = d.theme;
         state = d.state;
         // thread::sleep(std::time::Duration::from_millis(50));
     }
 }
 
+fn rand_pos() -> [f32; 2]
+{
+    [rand::thread_rng().gen_range(0.0..screen_width()), rand::thread_rng().gen_range(0.0..screen_height())]
+}
 /*
 let d = draw_graphics(state, theme).await;
         theme = d.theme;

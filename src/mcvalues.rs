@@ -1,46 +1,78 @@
-pub mod mcvalues
-{
-    use serde::{Serialize, Deserialize};
+pub mod mcvalues {
+    use serde::{Deserialize, Serialize};
 
-    #[derive(Serialize, Deserialize, Clone, Debug)]
-    pub struct Effect
-    {
+    #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+    pub struct Effect {
         pub id: String,
-        pub lvl: i8
+        pub lvl: u8,
+    }
+    impl Effect {
+        pub fn effect_name_list() -> [String; 33] {
+            [
+                "speed".to_string(),
+                "slowness".to_string(),
+                "haste".to_string(),
+                "mining_fatigue".to_string(),
+                "strength".to_string(),
+                "instant_health".to_string(),
+                "instant_damage".to_string(),
+                "jump_boost".to_string(),
+                "nausea".to_string(),
+                "regeneration".to_string(),
+                "resistance".to_string(),
+                "fire_resistance".to_string(),
+                "water_breathing".to_string(),
+                "invisibility".to_string(),
+                "blindness".to_string(),
+                "night_vision".to_string(),
+                "hunger".to_string(),
+                "weakness".to_string(),
+                "poison".to_string(),
+                "wither".to_string(),
+                "health_boost".to_string(),
+                "absorption".to_string(),
+                "saturation".to_string(),
+                "glowing".to_string(),
+                "levitation".to_string(),
+                "luck".to_string(),
+                "bad_luck".to_string(),
+                "slow_falling".to_string(),
+                "conduit_power".to_string(),
+                "dolphins_grace".to_string(),
+                "bad_omen".to_string(),
+                "hero_of_the_village".to_string(),
+                "darkness".to_string(),
+            ]
+        }
     }
 
-    #[derive(Serialize, Deserialize, Clone, Debug)]
-    pub struct BossAbility
-    {
+    #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+    pub struct BossAbility {
         pub ability_type: String,
         pub delay: i32,
         pub location: String,
-        pub config: Vec<String>
+        pub config: Vec<String>,
     }
 
-    #[derive(Serialize, Deserialize, Clone, Debug)]
-    pub struct BossEquipmentItem
-    {
+    #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+    pub struct BossEquipmentItem {
         pub item_type: String,
-        pub enchantments: Vec<Enchantment>
+        pub enchantments: Vec<Enchantment>,
     }
 
-    #[derive(Serialize, Deserialize, Clone, Debug)]
-    pub struct BossDrop
-    {
+    #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+    pub struct BossDrop {
         pub item: String,
-        pub chance: f32
+        pub chance: f32,
     }
 
-    #[derive(Serialize, Deserialize, Clone, Debug)]
-    pub struct Enchantment
-    {
+    #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+    pub struct Enchantment {
         pub id: String,
-        pub lvl: i8
+        pub lvl: i8,
     }
 
-    pub mod colors
-    {
+    pub mod colors {
         pub const WHITE: &str = "white";
         pub const LIGHT_GRAY: &str = "light_gray";
         pub const GRAY: &str = "gray";
@@ -57,10 +89,30 @@ pub mod mcvalues
         pub const PURPLE: &str = "purple";
         pub const MAGENTA: &str = "magenta";
         pub const PINK: &str = "pink";
+
+        #[derive(Debug, PartialEq, Clone, Copy)]
+        pub enum Colors
+        {
+            White,
+            LightGray,
+            Gray,
+            Black,
+            Brown,
+            Red,
+            Orange,
+            Yellow,
+            Lime,
+            Green,
+            Cyan,
+            LightBlue,
+            Blue,
+            Purple,
+            Magenta,
+            Pink
+        }
     }
 
-    pub mod mobs
-    {
+    pub mod mobs {
         pub const AXOLOTL: &str = "axolotl";
         pub const BAT: &str = "bat";
         pub const CAT: &str = "cat";
@@ -139,21 +191,88 @@ pub mod mcvalues
         pub const KILLER_BUNNY: &str = "killer_bunny";
         pub const ILLUSIONER: &str = "illusioner";
 
-        pub fn moblist() -> [String; 77]
-        {
-            [AXOLOTL.to_string(), BAT.to_string(), CAT.to_string(), CHICKEN.to_string(), COD.to_string(), COW.to_string(), DONKEY.to_string(), FOX.to_string(), 
-            GLOW_SQUID.to_string(), HORSE.to_string(), MOOSHROOM.to_string(), MULE.to_string(), OCELOT.to_string(), PARROT.to_string(), PIG.to_string(), PUFFERFISH.to_string(), RABBIT.to_string(), 
-            SALMON.to_string(), SHEEP.to_string(), SKELETON_HORSE.to_string(), SNOW_GOLEM.to_string(), SQUID.to_string(), STRIDER.to_string(), TROPICAL_FISH.to_string(), TURTLE.to_string(), 
-            VILLAGER.to_string(), WANDERING_TRADER.to_string(), BEE.to_string(), CAVE_SPIDER.to_string(), DOLPHIN.to_string(), ENDERMAN.to_string(), GOAT.to_string(), IRON_GOLEM.to_string(), 
-            LLAMA.to_string(), PANDA.to_string(), PIGLIN.to_string(), POLAR_BEAR.to_string(), SPIDER.to_string(), TRADER_LLAMA.to_string(), WOLF.to_string(), ZOMBIFIED_PIGLIN.to_string(), 
-            BLAZE.to_string(), CHICKEN_JOCKEY.to_string(), CREEPER.to_string(), DROWNED.to_string(), ELDER_GUARDIAN.to_string(), ENDERMITE.to_string(), EVOKER.to_string(), GHAST.to_string(), 
-            GUARDIAN.to_string(), HOGLIN.to_string(), HUSK.to_string(), MAGMA_CUBE.to_string(), PHANTOM.to_string(), PIGLIN_BRUTE.to_string(), PILLAGER.to_string(), RAVAGER.to_string(), 
-            SHULKER.to_string(), SILVERFISH.to_string(), SKELETON.to_string(), SKELETON_HORSEMAN.to_string(), SLIME.to_string(), SPIDER_JOCKEY.to_string(), STRAY.to_string(), 
-            VEX.to_string(), VINDICATOR.to_string(), WITCH.to_string(), WITHER_SKELETON.to_string(), ZOGLIN.to_string(), ZOMBIE.to_string(), ZOMBIE_VILLAGER.to_string(), ENDERDRAGON.to_string(), 
-            WITHER.to_string(), GIANT.to_string(), ZOMBIE_HORSE.to_string(), KILLER_BUNNY.to_string(), ILLUSIONER.to_string(), ]
+        pub fn moblist() -> [String; 77] {
+            [
+                AXOLOTL.to_string(),
+                BAT.to_string(),
+                CAT.to_string(),
+                CHICKEN.to_string(),
+                COD.to_string(),
+                COW.to_string(),
+                DONKEY.to_string(),
+                FOX.to_string(),
+                GLOW_SQUID.to_string(),
+                HORSE.to_string(),
+                MOOSHROOM.to_string(),
+                MULE.to_string(),
+                OCELOT.to_string(),
+                PARROT.to_string(),
+                PIG.to_string(),
+                PUFFERFISH.to_string(),
+                RABBIT.to_string(),
+                SALMON.to_string(),
+                SHEEP.to_string(),
+                SKELETON_HORSE.to_string(),
+                SNOW_GOLEM.to_string(),
+                SQUID.to_string(),
+                STRIDER.to_string(),
+                TROPICAL_FISH.to_string(),
+                TURTLE.to_string(),
+                VILLAGER.to_string(),
+                WANDERING_TRADER.to_string(),
+                BEE.to_string(),
+                CAVE_SPIDER.to_string(),
+                DOLPHIN.to_string(),
+                ENDERMAN.to_string(),
+                GOAT.to_string(),
+                IRON_GOLEM.to_string(),
+                LLAMA.to_string(),
+                PANDA.to_string(),
+                PIGLIN.to_string(),
+                POLAR_BEAR.to_string(),
+                SPIDER.to_string(),
+                TRADER_LLAMA.to_string(),
+                WOLF.to_string(),
+                ZOMBIFIED_PIGLIN.to_string(),
+                BLAZE.to_string(),
+                CHICKEN_JOCKEY.to_string(),
+                CREEPER.to_string(),
+                DROWNED.to_string(),
+                ELDER_GUARDIAN.to_string(),
+                ENDERMITE.to_string(),
+                EVOKER.to_string(),
+                GHAST.to_string(),
+                GUARDIAN.to_string(),
+                HOGLIN.to_string(),
+                HUSK.to_string(),
+                MAGMA_CUBE.to_string(),
+                PHANTOM.to_string(),
+                PIGLIN_BRUTE.to_string(),
+                PILLAGER.to_string(),
+                RAVAGER.to_string(),
+                SHULKER.to_string(),
+                SILVERFISH.to_string(),
+                SKELETON.to_string(),
+                SKELETON_HORSEMAN.to_string(),
+                SLIME.to_string(),
+                SPIDER_JOCKEY.to_string(),
+                STRAY.to_string(),
+                VEX.to_string(),
+                VINDICATOR.to_string(),
+                WITCH.to_string(),
+                WITHER_SKELETON.to_string(),
+                ZOGLIN.to_string(),
+                ZOMBIE.to_string(),
+                ZOMBIE_VILLAGER.to_string(),
+                ENDERDRAGON.to_string(),
+                WITHER.to_string(),
+                GIANT.to_string(),
+                ZOMBIE_HORSE.to_string(),
+                KILLER_BUNNY.to_string(),
+                ILLUSIONER.to_string(),
+            ]
         }
     }
-
 
     pub const HORIZONTAL_SPACE: &str = "                                                                                                                                                                                                                                      ";
 }
