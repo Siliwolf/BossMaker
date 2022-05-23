@@ -75,7 +75,6 @@ pub mod backend
         // Draw things before egui
 
         //Background
-        use std::fs::File;
         
         draw_bg(dot_loc);
         
