@@ -22,7 +22,7 @@ pub mod file {
         pub leggings: BossEquipmentItem,
         pub boots: BossEquipmentItem,
         pub abilities: Vec<BossAbility>,
-        pub drop_type: String,
+        pub drop_type: BossDropType,
         pub drops: Vec<BossDrop>,
     }
 
@@ -70,7 +70,7 @@ pub mod file {
                     enchantments: [].to_vec(),
                 },
                 abilities: [].to_vec(),
-                drop_type: String::new(),
+                drop_type: BossDropType::OnlyOne,
                 drops: [].to_vec(),
             };
 

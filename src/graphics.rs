@@ -2,7 +2,7 @@ pub mod backend
 {
     use egui::*;
     use macroquad::prelude::*;
-    use crate::{mcvalues::mcvalues::{*, colors::Colors}, themes::*, file::{file::*, self}, editor};
+    use crate::{mcvalues::mcvalues::{*, colors::Colors}, themes::*, file::{file::*, self}, editor::{self, editor::WindowsOpen}};
 
     pub struct OutputData
     {
@@ -46,7 +46,7 @@ pub mod backend
         3: Sandy
     */
 
-    pub async fn draw_graphics(state: i8, theme: i8, macroquad_font: Font, directory: &str, cur_boss_name: &mut String, cur_proj: &mut Project, cur_effect: &mut Effect, cur_custom_name_color: &mut Colors, dot_loc: &mut BgDots) -> OutputData
+    pub async fn draw_graphics(state: i8, theme: i8, macroquad_font: Font, directory: &str, cur_boss_name: &mut String, cur_proj: &mut Project, cur_effect: &mut Effect, cur_custom_name_color: &mut Colors, dot_loc: &mut BgDots, cur_enchantment: &mut Enchantment, windows_open: &mut WindowsOpen, cur_ability: &mut BossAbility, cur_boss_drop: &mut BossDrop) -> OutputData
     {
         set_theme(theme);
 
@@ -68,7 +68,7 @@ pub mod backend
 
             if state == EDITOR
             {
-                editor::editor::draw_editor(cur_proj, egui_ctx, &mut output_data, cur_effect, cur_custom_name_color);
+                editor::editor::draw_editor(cur_proj, egui_ctx, &mut output_data, cur_effect, cur_enchantment, cur_custom_name_color, windows_open, cur_ability, cur_boss_drop);
             }
         });
 
@@ -234,25 +234,25 @@ pub mod backend
 
         let speed = 130.0;
 
-        let speed = speed * thread_rng().gen_range(0.8..1.2);
+        let rand_fac = thread_rng().gen_range(0.8..1.2);
 
         //Blue dot
         if dot_loc.blue_up
         {
-            dot_loc.blue[1] += -speed * get_frame_time();
+            dot_loc.blue[1] += -speed * get_frame_time() * rand_fac;
         }
         else
         {
-            dot_loc.blue[1] += speed * get_frame_time();
+            dot_loc.blue[1] += speed * get_frame_time() * rand_fac;
         }
 
         if dot_loc.blue_right
         {
-            dot_loc.blue[0] += speed * get_frame_time();
+            dot_loc.blue[0] += speed * get_frame_time() * rand_fac;
         }
         else
         {
-            dot_loc.blue[0] += -speed * get_frame_time();
+            dot_loc.blue[0] += -speed * get_frame_time() * rand_fac;
         }
 
         if dot_loc.blue[0] >= screen_width()
@@ -278,20 +278,20 @@ pub mod backend
         //Red dot
         if dot_loc.red_up
         {
-            dot_loc.red[1] += -speed * get_frame_time();
+            dot_loc.red[1] += -speed * get_frame_time() * rand_fac;
         }
         else
         {
-            dot_loc.red[1] += speed * get_frame_time();
+            dot_loc.red[1] += speed * get_frame_time() * rand_fac;
         }
 
         if dot_loc.red_right
         {
-            dot_loc.red[0] += speed * get_frame_time();
+            dot_loc.red[0] += speed * get_frame_time() * rand_fac;
         }
         else
         {
-            dot_loc.red[0] += -speed * get_frame_time();
+            dot_loc.red[0] += -speed * get_frame_time() * rand_fac;
         }
 
         if dot_loc.red[0] >= screen_width()
@@ -317,20 +317,20 @@ pub mod backend
         //Green dot
         if dot_loc.green_up
         {
-            dot_loc.green[1] += -speed * get_frame_time();
+            dot_loc.green[1] += -speed * get_frame_time() * rand_fac;
         }
         else
         {
-            dot_loc.green[1] += speed * get_frame_time();
+            dot_loc.green[1] += speed * get_frame_time() * rand_fac;
         }
 
         if dot_loc.green_right
         {
-            dot_loc.green[0] += speed * get_frame_time();
+            dot_loc.green[0] += speed * get_frame_time() * rand_fac;
         }
         else
         {
-            dot_loc.green[0] += -speed * get_frame_time();
+            dot_loc.green[0] += -speed * get_frame_time() * rand_fac;
         }
 
         if dot_loc.green[0] >= screen_width()
@@ -354,20 +354,20 @@ pub mod backend
         //Yellow dot
         if dot_loc.yellow_up
         {
-            dot_loc.yellow[1] += -speed * get_frame_time();
+            dot_loc.yellow[1] += -speed * get_frame_time() * rand_fac;
         }
         else
         {
-            dot_loc.yellow[1] += speed * get_frame_time();
+            dot_loc.yellow[1] += speed * get_frame_time() * rand_fac;
         }
 
         if dot_loc.yellow_right
         {
-            dot_loc.yellow[0] += speed * get_frame_time();
+            dot_loc.yellow[0] += speed * get_frame_time() * rand_fac;
         }
         else
         {
-            dot_loc.yellow[0] += -speed * get_frame_time();
+            dot_loc.yellow[0] += -speed * get_frame_time() * rand_fac;
         }
 
         if dot_loc.yellow[0] >= screen_width()

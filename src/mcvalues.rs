@@ -47,11 +47,32 @@ pub mod mcvalues {
     }
 
     #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+    pub enum BossAbilityType
+    {
+        Lighting,
+        Summon
+    }
+
+    #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+    pub enum BossDropType
+    {
+        OnlyOne,
+        IndividualProbabilities
+    }
+
+    #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+    pub enum BossAbilityLocationType
+    {
+        AtSelf,
+        NearestPlayer
+    }
+
+    #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
     pub struct BossAbility {
-        pub ability_type: String,
-        pub delay: i32,
-        pub location: String,
-        pub config: Vec<String>,
+        pub ability_type: BossAbilityType,
+        pub delay: u32,
+        pub location: BossAbilityLocationType,
+        pub config: [String; 8],
     }
 
     #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
@@ -69,7 +90,53 @@ pub mod mcvalues {
     #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
     pub struct Enchantment {
         pub id: String,
-        pub lvl: i8,
+        pub lvl: u8,
+    }
+
+    impl Enchantment
+    {
+        pub fn ench_list() -> [String; 37]
+        {
+            [
+                "aqua_affinity".to_string(),
+                "bane_of_arthropods".to_string(),
+                "blast_protection".to_string(),
+                "channeling".to_string(),
+                "curse_of_binding".to_string(),
+                "curse_of_vanishing".to_string(),
+                "depth_strider".to_string(),
+                "efficiency".to_string(),
+                "feather_falling".to_string(),
+                "fire_aspect".to_string(),
+                "fire_protection".to_string(),
+                "flame".to_string(),
+                "fortune".to_string(),
+                "frost_walker".to_string(),
+                "impaling".to_string(),
+                "infinity".to_string(),
+                "knockback".to_string(),
+                "looting".to_string(),
+                "loyalty".to_string(),
+                "luck_of_the_sea".to_string(),
+                "lure".to_string(),
+                "mending".to_string(),
+                "multishot".to_string(),
+                "piercing".to_string(),
+                "power".to_string(),
+                "projectile_protection".to_string(),
+                "protection".to_string(),
+                "punch".to_string(),
+                "quick_charge".to_string(),
+                "respiration".to_string(),
+                "sharpness".to_string(),
+                "silk_touch".to_string(),
+                "smite".to_string(),
+                "soul_speed".to_string(),
+                "sweeping_edge".to_string(),
+                "thorns".to_string(),
+                "unbreaking".to_string()
+            ]
+        }
     }
 
     pub mod colors {
