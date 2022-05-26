@@ -50,7 +50,13 @@ pub mod mcvalues {
     pub enum BossAbilityType
     {
         Lighting,
-        Summon
+        Summon,
+        ProjectileToTarget,
+        ProjectileExplosion,
+        UnstuckTeleport,
+        UnstuckDespawn,
+        DeAggro,
+        Explosion
     }
 
     #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
@@ -64,7 +70,8 @@ pub mod mcvalues {
     pub enum BossAbilityLocationType
     {
         AtSelf,
-        NearestPlayer
+        NearestPlayer,
+        Random
     }
 
     #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
@@ -84,6 +91,7 @@ pub mod mcvalues {
     #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
     pub struct BossDrop {
         pub item: String,
+        pub quantity: i32,
         pub chance: f32,
     }
 

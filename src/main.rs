@@ -1,16 +1,33 @@
+use std::env::set_current_dir;
+
 use boss_maker::editor::editor::WindowsOpen;
 use boss_maker::graphics::backend::*;
 use boss_maker::file::file::*;
 use boss_maker::mcvalues::mcvalues::{Effect, Enchantment, BossAbility, BossAbilityType, BossAbilityLocationType, BossDrop};
 use boss_maker::mcvalues::mcvalues::colors::Colors;
-use boss_maker::themes::themes::*;use macroquad::prelude::*;
+use boss_maker::themes::themes::*;
+use macroquad::miniquad::conf::Icon;
+use macroquad::prelude::*;
 use rand::*;
 extern crate rand;
 
-#[macroquad::main("Craftz Boss Maker")]
+fn window_conf() -> Conf {
+    Conf {
+        window_title: "Craftz Boss Maker".to_owned(),
+        fullscreen: false,
+        window_resizable: true,
+        icon: Some(Icon { 
+            small: include_bytes!("./resources/icon_small.rgba").clone(), 
+            medium: include_bytes!("./resources/icon_medium.rgba").clone(), 
+            big: include_bytes!("./resources/icon_large.rgba").clone() 
+        }),
+        ..Default::default()
+    }
+}
+
+#[macroquad::main(window_conf)]
 async fn main()
 {
-
     let mut state: i8 = MAIN_SCREEN;
     let mut theme: i8 = 0;
 
@@ -49,7 +66,7 @@ async fn main()
     let mut cur_enchant: Enchantment = Enchantment { id: String::new(), lvl: 1 };
     let mut windows_open = WindowsOpen::new();
     let mut cur_ability = BossAbility {ability_type: BossAbilityType::Summon, delay: 0, location: BossAbilityLocationType::AtSelf, config: [String::new(), String::new(), String::new(), String::new(), String::new(), String::new(), String::new(), String::new()]};
-    let mut cur_boss_drop: BossDrop = BossDrop { item: "".to_string(), chance: 0.5 };
+    let mut cur_boss_drop: BossDrop = BossDrop { item: "".to_string(), chance: 0.5, quantity: 0 };
 
     //Main Loop    
     loop {

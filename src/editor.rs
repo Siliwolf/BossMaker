@@ -397,6 +397,12 @@ pub mod editor
                     .show_ui(ui, |ui|
                     {
                         ui.selectable_value(&mut cur_ability.ability_type, BossAbilityType::Lighting, "Lightning");
+                        ui.selectable_value(&mut cur_ability.ability_type, BossAbilityType::DeAggro, "De-Aggro");
+                        ui.selectable_value(&mut cur_ability.ability_type, BossAbilityType::Explosion, "Explosion");
+                        ui.selectable_value(&mut cur_ability.ability_type, BossAbilityType::ProjectileExplosion, "Projectile Explosion");
+                        ui.selectable_value(&mut cur_ability.ability_type, BossAbilityType::ProjectileToTarget, "Projectile to Target");
+                        ui.selectable_value(&mut cur_ability.ability_type, BossAbilityType::UnstuckDespawn, "Unstuck Despawn");
+                        ui.selectable_value(&mut cur_ability.ability_type, BossAbilityType::UnstuckTeleport, "Unstuck Teleport");
                         ui.selectable_value(&mut cur_ability.ability_type, BossAbilityType::Summon, "Summon");
                     });
 
@@ -409,6 +415,7 @@ pub mod editor
                     {
                         ui.selectable_value(&mut cur_ability.location, BossAbilityLocationType::AtSelf, "At Self");
                         ui.selectable_value(&mut cur_ability.location, BossAbilityLocationType::NearestPlayer, "Nearest Player");
+                        ui.selectable_value(&mut cur_ability.location, BossAbilityLocationType::Random, "Random");
                     });
 
                     ui.label("Config Value 1:");
@@ -486,6 +493,9 @@ pub mod editor
 
                     ui.text_edit_singleline(&mut cur_drop.item);
 
+                    ui.label("Item Quantity");
+                    ui.add(egui::DragValue::new(&mut cur_drop.quantity).clamp_range(std::ops::RangeInclusive::new(1, 128)));
+
                     ui.label("Drop Chance:");
                     ui.add(egui::Slider::new(&mut cur_drop.chance, std::ops::RangeInclusive::new(0.0, 1.0)));
 
@@ -493,14 +503,14 @@ pub mod editor
                     {
                         project.data.drops.push(cur_drop.clone());
 
-                        *cur_drop = BossDrop{item: "".to_string(), chance: 0.5};
+                        *cur_drop = BossDrop{item: "".to_string(), chance: 0.5, quantity: 0};
                     }
 
                     ui.menu_button("Drop items list, click on one to remove it", |ui|
                     {
                         for drop in &project.clone().data.drops
                         {
-                            if ui.button(format!("{:?}, {:?}", drop.item, drop.chance)).clicked()
+                            if ui.button(format!("{:?}, {:?}, {}", drop.item, drop.chance, drop.quantity)).clicked()
                             {
                                 let proj2 = project.clone();
                                 
