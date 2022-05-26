@@ -16,10 +16,8 @@ Amount (whole number)
 #### Shoots specified projectile (arrow, fireball, snowball, etc.) at target location
 
 ##### Config slot 1:
-Arrow amount (whole number)
+Projectile amount (whole number)
 ##### Config slot 2:
-Arrow damage (number)
-##### Config slot 3:
 Projectile type (projectile type)
 
 ### Projectile Explosion
